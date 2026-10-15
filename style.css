@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#btn1 {
+  color: brown;
+}
+
+#textInput {
+  position: absolute;
+  bottom: 100px;
+  left: calc(50% - 150px);
+}
+
+#btn1 {
+  position: absolute;
+  bottom: 100px;
+}
