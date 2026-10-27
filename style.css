@@ -3,17 +3,36 @@
   padding: 0;
 }
 
-#btn1 {
-  color: brown;
+.container {
+  width: 100%;
+  bottom: 50px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#textInput {
-  position: absolute;
-  bottom: 100px;
-  left: calc(50% - 150px);
+#btn1 {
+  color: rgb(20, 51, 136);
+  margin-top: 10px;
+  padding: 5px;
 }
 
-#btn1 {
-  position: absolute;
-  bottom: 100px;
+.parentDiv {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.img1 {
+  width: 20px;
+}
+
+.img2 {
+  width: 20px;
+}
+
+.strikethrough-text {
+  text-decoration: line-through;
 }
