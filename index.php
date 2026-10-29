@@ -10,9 +10,42 @@
 
 <body>
 
+    <div class="navbar">
+        <div id="logo">TODO</div>
+        <div id="auth">LogIN | SignUP</div>
+    </div>
+
     <div class="container">
-        <input type="text" id="textInput" required>
-        <button id="btn1">Add Task!</button>
+
+        <div class="task-container">
+            <div class="task">
+                <p>Task 1</p>
+                <div>
+                    <img src="./icons/check.svg" alt="img1" class="img1">
+                    <img src="./icons/delete.svg" alt="img2" class="img2">
+                </div>
+            </div>
+            <div class="task">
+                <p>Task 2</p>
+                <div>
+                    <img src="./icons/check.svg" alt="img1" class="img1">
+                    <img src="./icons/delete.svg" alt="img2" class="img2">
+                </div>
+            </div>
+            <div class="task">
+                <p>Task 3</p>
+                <div>
+                    <img src="./icons/check.svg" alt="img1" class="img1">
+                    <img src="./icons/delete.svg" alt="img2" class="img2">
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" placeholder="Input Your Task Here!" id="textInput"  required>
+            <button id="add-task-btn">Add Task!</button>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
