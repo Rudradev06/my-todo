@@ -1,3 +1,28 @@
+<?php
+try {
+    $dbPath = __DIR__ . '/task_db.db';
+
+    $pdo = new PDO("sqlite:" . $dbPath);
+
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+    echo "Connected to the SQLite database successfully via PDO!";
+    
+    $sql = "CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        is_completed INTEGER DEFAULT 0 CHECK (is_completed IN (0, 1)),
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    $pdo->exec($sql);
+    echo "Table 'tasks' is ready to use!";
+    
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

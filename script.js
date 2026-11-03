@@ -26,8 +26,18 @@ function createTask() {
 
   img1.addEventListener("click", taskCompleted);
   function taskCompleted() {
+    if (img1.src.endsWith("/icons/check.svg")) {
+      img1.src = "./icons/check-fill.svg";
+      taskDiv.style.backgroundColor = "#4ed44e";
+    } else {
+      img1.src = "./icons/check.svg";
+      taskDiv.style.backgroundColor = "white";
+    }
     pTag.classList.toggle("strikethrough-text");
   }
-}
 
-// document.querySelector(".img1").addEventListener("click", taskDeleted);
+  img2.addEventListener("click", taskDeleted);
+  function taskDeleted() {
+    taskContainer.removeChild(taskDiv);
+  }
+}
