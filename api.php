@@ -1,10 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-$raw = file_get_contents("php://input");
-$in = json_decode($raw, true);
-
-$task_title = $in['task_title'];
 
 try {
     $dbPath = __DIR__ . '/task_db.db';
@@ -24,24 +20,57 @@ try {
         )
     ");
 
-    // Insert the task
-    $sql = "INSERT INTO tasks (title) VALUES (:task_title)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':task_title', $task_title);
-    $stmt->execute();
+    $method = $_SERVER['REQUEST_METHOD'];
 
-    // Get the newly inserted task
-    $lastId = $pdo->lastInsertId();
+    if ($method === 'GET') {
+        $stmt = $pdo->query("SELECT * FROM tasks");
+        $tasks = $stmt->fetchAll();
+        
+        echo json_encode([
+            "success" => true,
+            "tasks" => $tasks
+        ]);
+        exit;
+    }
 
-    $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = :id");
-    $stmt->execute([':id' => $lastId]);
-    $newTask = $stmt->fetch();
+    if ($method === 'POST') {
 
-    // Return success response
-    echo json_encode([
-        "success" => true,
-        "task" => $newTask
-    ]);
+        $raw = file_get_contents("php://input");
+        $in = json_decode($raw, true);
+
+        $task_title = $in['task_title'];
+        
+
+        // for Inserting the task
+        $stmt = $pdo->prepare("INSERT INTO tasks (title) VALUES (:task_title)");
+        $stmt->bindParam(':task_title', $task_title);
+        $stmt->execute();
+
+        // to Get the newly inserted task
+        $lastId = $pdo->lastInsertId();
+        $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = :id");
+        $stmt->execute([':id' => $lastId]);
+        $newTask = $stmt->fetch();   
+
+        // Return success response
+        echo json_encode([
+            "success" => true,
+            "task" => $newTask
+        ]);
+    }
+
+    if ($method === 'DELETE') {
+        $raw = file_get_contents("php://input");
+        $in = json_decode($raw, true);
+        $id = $in['id'];
+
+        $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        echo json_encode(["success" => true]);
+        exit;
+    }
 
 } catch (PDOException $e) {
     http_response_code(500);

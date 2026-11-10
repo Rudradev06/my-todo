@@ -24,21 +24,8 @@
                     <img src="./icons/check.svg" alt="img1" class="img1">
                     <img src="./icons/delete.svg" alt="img2" class="img2">
                 </div>
-            </div>
-            <div class="task">
-                <p>Task 2</p>
-                <div>
-                    <img src="./icons/check.svg" alt="img1" class="img1">
-                    <img src="./icons/delete.svg" alt="img2" class="img2">
-                </div>
-            </div>
-            <div class="task">
-                <p>Task 3</p>
-                <div>
-                    <img src="./icons/check.svg" alt="img1" class="img1">
-                    <img src="./icons/delete.svg" alt="img2" class="img2">
-                </div>
             </div> -->
+            
         </div>
 
         <div class="input-container">

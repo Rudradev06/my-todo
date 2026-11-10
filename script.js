@@ -4,6 +4,34 @@ const inputData = document.querySelector("#textInput");
 
 addTaskBtn.addEventListener("click", createTask);
 
+document.addEventListener("DOMContentLoaded", loadTasks);
+
+async function loadTasks() {
+  try {
+    const response = await fetch("api.php", {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log("Tasks from database:", data);
+
+    if (data.success) {
+      data.tasks.forEach((task) => {
+        addTaskToUI(task);
+      });
+    } else {
+      console.error(data.error);
+    }
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+  }
+}
+
 async function createTask() {
   const taskTitle = inputData.value;
 
@@ -61,8 +89,8 @@ function addTaskToUI(task) {
     }
   });
 
-  img2.addEventListener("click", function () {
-    taskDiv.remove();
+  img2.addEventListener("click", () => {
+    deleteTask(task.id, taskDiv);
   });
 }
 
@@ -84,4 +112,28 @@ async function sendPostRequest(taskTitle) {
   }
 
   return await response.json();
+}
+
+async function deleteTask(taskId, taskDiv) {
+  try {
+    const response = await fetch("api.php", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: taskId }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to delete task from database");
+    }
+
+    const data = await response.json();
+    console.log("Delete response:", data);
+    if (data.success) {
+      taskDiv.remove();
+    } else {
+      console.error(data.error);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
