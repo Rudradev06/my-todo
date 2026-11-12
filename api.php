@@ -59,6 +59,24 @@ try {
         ]);
     }
 
+    if ($method === 'PATCH') {
+        $raw = file_get_contents("php://input");
+        $in = json_decode($raw, true);
+
+        $id = $in['id'];
+        $is_completed = $in['is_completed'];
+
+        $stmt = $pdo->prepare("UPDATE tasks SET is_completed = :is_completed WHERE id = :id");
+
+        $stmt->execute([':is_completed' => $is_completed,':id' => $id]);
+
+        echo json_encode([
+            "success" => true
+        ]);
+
+        exit;
+    }
+
     if ($method === 'DELETE') {
         $raw = file_get_contents("php://input");
         $in = json_decode($raw, true);
