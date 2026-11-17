@@ -1,29 +1,26 @@
 <?php
+
+require_once 'db.php';
+
 header('Content-Type: application/json');
 
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    echo json_encode([
+        "success" => false,
+        "error" => "Unauthorized. Please login."
+    ]);
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
 
 try {
-    $dbPath = __DIR__ . '/task_db.db';
-
-    $pdo = new PDO("sqlite:" . $dbPath);
-
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-    // Create table if it doesn't exist
-    $pdo->exec("
-        CREATE TABLE IF NOT EXISTS tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            is_completed INTEGER DEFAULT 0 CHECK (is_completed IN (0, 1)),
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ");
-
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        $stmt = $pdo->query("SELECT * FROM tasks");
+        $stmt = $pdo->prepare("SELECT * FROM tasks WHERE user_id = :user_id ORDER BY created_at DESC");
+        $stmt->execute([':user_id' => $user_id]);
         $tasks = $stmt->fetchAll();
         
         echo json_encode([
@@ -40,16 +37,14 @@ try {
 
         $task_title = $in['task_title'];
         
-
         // for Inserting the task
-        $stmt = $pdo->prepare("INSERT INTO tasks (title) VALUES (:task_title)");
-        $stmt->bindParam(':task_title', $task_title);
-        $stmt->execute();
+        $stmt = $pdo->prepare("INSERT INTO tasks (title, user_id) VALUES (:task_title, :user_id)");
+        $stmt->execute([':task_title', $task_title, ':user_id' => $user_id]);
 
         // to Get the newly inserted task
         $lastId = $pdo->lastInsertId();
-        $stmt = $pdo->prepare("SELECT * FROM tasks WHERE id = :id");
-        $stmt->execute([':id' => $lastId]);
+        $stmt = $pdo->prepare(" SELECT * FROM tasks WHERE id = :id AND user_id = :user_id");
+        $stmt->execute([':id' => $lastId, ':user_id' => $user_id]);
         $newTask = $stmt->fetch();   
 
         // Return success response
@@ -67,9 +62,7 @@ try {
         $is_completed = $in['is_completed'];
 
         $stmt = $pdo->prepare("UPDATE tasks SET is_completed = :is_completed WHERE id = :id");
-
         $stmt->execute([':is_completed' => $is_completed,':id' => $id]);
-
         echo json_encode([
             "success" => true
         ]);

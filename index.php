@@ -1,3 +1,15 @@
+<?php
+
+require_once 'db.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +24,12 @@
 
     <div class="navbar">
         <div id="logo">TODO</div>
-        <div id="auth">LogIN | SignUP</div>
+        <div id="auth">
+            <span>
+                Welcome, <?= htmlspecialchars($_SESSION['username']) ?>
+            </span>
+            <a href="logout.php">Logout</a>
+        </div>
     </div>
 
     <div class="container">
