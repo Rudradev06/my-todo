@@ -39,7 +39,7 @@ try {
         
         // for Inserting the task
         $stmt = $pdo->prepare("INSERT INTO tasks (title, user_id) VALUES (:task_title, :user_id)");
-        $stmt->execute([':task_title', $task_title, ':user_id' => $user_id]);
+        $stmt->execute([':task_title' => $task_title, ':user_id' => $user_id]);
 
         // to Get the newly inserted task
         $lastId = $pdo->lastInsertId();
@@ -61,8 +61,8 @@ try {
         $id = $in['id'];
         $is_completed = $in['is_completed'];
 
-        $stmt = $pdo->prepare("UPDATE tasks SET is_completed = :is_completed WHERE id = :id");
-        $stmt->execute([':is_completed' => $is_completed,':id' => $id]);
+        $stmt = $pdo->prepare("UPDATE tasks SET is_completed = :is_completed WHERE id = :id AND user_id = :user_id");
+        $stmt->execute([':is_completed' => $is_completed,':id' => $id, ':user_id' => $user_id]);
         echo json_encode([
             "success" => true
         ]);
@@ -75,10 +75,9 @@ try {
         $in = json_decode($raw, true);
         $id = $in['id'];
 
-        $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id");
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-
+        $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = :id AND user_id = :user_id");
+        $stmt->execute([':id' => $id, ':user_id' => $user_id]);
+        
         echo json_encode(["success" => true]);
         exit;
     }
